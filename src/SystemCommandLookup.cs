@@ -1,3 +1,6 @@
+using Mono.Unix;
+using Mono.Unix.Native;
+
 class SystemCommandLookup
 {
     private List<string> PathDirs = new();
@@ -11,7 +14,7 @@ class SystemCommandLookup
         // Ensure paths exist then put them in the PathDirs list
         foreach (var path in paths)
         {
-            if (Path.Exists(path))
+            if (Directory.Exists(path))
                 PathDirs.Add(path);
         }
     }
@@ -23,7 +26,13 @@ class SystemCommandLookup
         {
             var path = Path.Combine(dir, command);
             if (File.Exists(path))
-                return path;
+            {
+                // Check execute permissions
+                var info = new UnixFileInfo(path);
+
+                if (info.CanAccess(AccessModes.X_OK))
+                    return path;
+            }
         }
 
         throw new FileNotFoundException($"{command}: not found");
