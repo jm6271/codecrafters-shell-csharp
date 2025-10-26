@@ -42,10 +42,29 @@ class Program
                     Console.Error.WriteLine("exit: Error: Too many arguments");
                 }
             }
+            else if (command.StartsWith("echo"))
+            {
+                // Print all args, with spaces between them
+                var args = command.Split(' ');
+
+                if (args.Length == 1)
+                {
+                    // Just print a newline
+                    Console.WriteLine();
+                }
+                else
+                {
+                    for (int i = 1; i < args.Length; i++)
+                    {
+                        Console.Write($"{args[i]} ");
+                    }
+                    Console.WriteLine();
+                }
+            }
             else
             {
                 // Command not recognized
-                Console.Error.WriteLine($"{command}: command not found");  
+                Console.Error.WriteLine($"{command}: command not found");
             }                      
         }
     }
