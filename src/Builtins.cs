@@ -2,6 +2,8 @@
 
 // NOTE: args array include the name of the command as the first item
 
+using System.Xml;
+
 static class Builtins
 {
     public static readonly Dictionary<string, Action<string[]>> Commands = new()
@@ -62,7 +64,16 @@ static class Builtins
             }
             else
             {
-                Console.WriteLine($"{args[1]}: not found");
+                try
+                {
+                    SystemCommandLookup commandLookup = new();
+                    string commandPath = commandLookup.GetCommandPath(args[1]);
+                    Console.WriteLine($"{args[1]} is {commandPath}");
+                }
+                catch (FileNotFoundException e)
+                {
+                    Console.Error.WriteLine(e.Message);
+                }
             }
         }
 

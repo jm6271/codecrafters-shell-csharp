@@ -1,6 +1,6 @@
 class CommandProcessor
 {
-    public static void ProcessCommand(string command)
+    public void ProcessCommand(string command)
     {
         command = command.Trim();
 

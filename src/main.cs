@@ -2,6 +2,7 @@ class Program
 {
     static void Main()
     {
+        CommandProcessor commandProcessor = new();
         while (true)
         {
             // Write prompt
@@ -11,7 +12,7 @@ class Program
             string command = Console.ReadLine() ?? "";
 
             // Process command
-            CommandProcessor.ProcessCommand(command);                  
+            commandProcessor.ProcessCommand(command);                  
         }
     }
 }
