@@ -61,6 +61,29 @@ class Program
                     Console.WriteLine();
                 }
             }
+            else if (command.StartsWith("type"))
+            {
+                var args = command.Split(' ');
+
+                if (args.Length == 2)
+                {
+                    switch (args[1])
+                    {
+                        case "echo":
+                        case "exit":
+                        case "type":
+                            Console.WriteLine($"{args[1]} is a shell builtin");
+                            break;
+                        default:
+                            Console.WriteLine($"{args[1]}: not found");
+                            break;
+                    }
+                }
+                if (args.Length > 2)
+                {
+                    Console.Error.WriteLine("type: Error: too many arguments");
+                }
+            }
             else
             {
                 // Command not recognized
