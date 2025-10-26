@@ -9,10 +9,44 @@ class Program
 
             // Read command
             string command = Console.ReadLine() ?? "";
+            command = command.Trim();
 
-            // Command not recognized
-            Console.Error.WriteLine($"{command}: command not found");            
+            if (command == "")
+            {
+                // whitespace
+                continue;
+            }
+            else if (command.StartsWith("exit"))
+            {
+                // Exit can take one arg, the exit code
+                var args = command.Split(' ');
+
+                if (args.Length == 1)
+                {
+                    Environment.Exit(0);
+                }
+                else if (args.Length == 2)
+                {
+                    try
+                    {
+                        int code = Convert.ToInt32(args[1]);
+                        Environment.Exit(code);
+                    }
+                    catch (Exception)
+                    {
+                        Console.Error.WriteLine($"exit: Error: invalid exit code '{args[1]}'");
+                    }
+                }
+                else
+                {
+                    Console.Error.WriteLine("exit: Error: Too many arguments");
+                }
+            }
+            else
+            {
+                // Command not recognized
+                Console.Error.WriteLine($"{command}: command not found");  
+            }                      
         }
-
     }
 }
