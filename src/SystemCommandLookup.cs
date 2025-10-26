@@ -21,8 +21,9 @@ class SystemCommandLookup
         // Search all directories on path for the specified command
         foreach (var dir in PathDirs)
         {
-            if (Path.Exists(Path.Combine(dir, command)))
-                return Path.Combine(dir, command);
+            var path = Path.Combine(dir, command);
+            if (File.Exists(path))
+                return path;
         }
 
         throw new FileNotFoundException($"{command}: not found");
