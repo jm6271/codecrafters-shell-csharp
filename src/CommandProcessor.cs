@@ -40,6 +40,40 @@ class CommandProcessor
 
     private static string[] SplitArgs(string command)
     {
-        return command.Split(' ');
+        List<string> args = [];
+        
+        string currentArg = "";
+
+        for (int i = 0; i < command.Length; i++)
+        {
+            char c = command[i];
+            bool inSingleQuote = false;
+
+            if (c == '\'')
+            {
+                if (inSingleQuote)
+                    inSingleQuote = false;
+                else
+                    inSingleQuote = true;
+            }
+            else if (c == ' ')
+            {
+                if (inSingleQuote)
+                    currentArg += c;
+                else
+                {
+                    args.Add(currentArg);
+                    currentArg = "";
+                }
+            }
+            else
+            {
+                currentArg += c;
+            }
+        }
+
+        args.Add(currentArg);
+
+        return [.. args];
     }
 }
