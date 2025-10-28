@@ -41,26 +41,53 @@ class CommandProcessor
     private static string[] SplitArgs(string command)
     {
         List<string> args = [];
-        
         string currentArg = "";
+        bool inSingleQuote = false;
+        bool inDoubleQuote = false;
+        bool escaped = false;
 
         for (int i = 0; i < command.Length; i++)
         {
             char c = command[i];
-            bool inSingleQuote = false;
+
+            if (escaped)
+            {
+                currentArg += c;
+                escaped = false;
+                continue;
+            }
+
+            if (c == '\\')
+            {
+                escaped = true;
+                continue;
+            }
 
             if (c == '\'')
             {
-                if (inSingleQuote)
-                    inSingleQuote = false;
+                if (!inDoubleQuote)
+                {
+                    inSingleQuote = !inSingleQuote;
+                }
                 else
-                    inSingleQuote = true;
-            }
-            else if (c == ' ')
-            {
-                if (inSingleQuote)
+                {
                     currentArg += c;
+                }
+            }
+            else if (c == '"')
+            {
+                if (!inSingleQuote)
+                {
+                    inDoubleQuote = !inDoubleQuote;
+                }
                 else
+                {
+                    currentArg += c;
+                }
+            }
+            else if (c == ' ' && !inSingleQuote && !inDoubleQuote)
+            {
+                if (currentArg.Length > 0)
                 {
                     args.Add(currentArg);
                     currentArg = "";
@@ -72,7 +99,10 @@ class CommandProcessor
             }
         }
 
-        args.Add(currentArg);
+        if (currentArg.Length > 0)
+        {
+            args.Add(currentArg);
+        }
 
         return [.. args];
     }

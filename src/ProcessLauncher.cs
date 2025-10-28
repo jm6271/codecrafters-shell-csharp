@@ -4,14 +4,23 @@ class ProcessLauncher
 {
     public static void RunProgram(string[] args)
     {
-        // Process.Start(args[0], args.Skip(1));
+        // Create argument string
+        string argString = "";
+        
+        foreach (var arg in args.Skip(1))
+        {
+            if (arg.Contains(' '))
+                argString += $"\"{arg}\" ";
+            else
+                argString += arg + ' ';
+        }
 
         Process process = new()
         {
             StartInfo = new()
             {
                 FileName = args[0],
-                Arguments = string.Join(' ', args.Skip(1)),
+                Arguments = argString,
             }
         };
 
