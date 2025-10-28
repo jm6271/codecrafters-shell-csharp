@@ -21,7 +21,7 @@ class CommandProcessor
         {
             // Try to run a program
             SystemCommandLookup commandLookup = new();
-            
+
             if (commandLookup.DoesCommandExist(args[0]))
                 ProcessLauncher.RunProgram(args);
             else
@@ -41,7 +41,7 @@ class CommandProcessor
     private static string[] SplitArgs(string command)
     {
         List<string> args = [];
-        string currentArg = "";
+        var currentArg = new System.Text.StringBuilder();
         bool inSingleQuote = false;
         bool inDoubleQuote = false;
         bool escaped = false;
@@ -52,58 +52,93 @@ class CommandProcessor
 
             if (escaped)
             {
-                currentArg += c;
+                // Only certain escapes are special inside double quotes
+                if (inDoubleQuote)
+                {
+                    if (c == '"' || c == '\\' || c == '$' || c == '`' || c == '\n')
+                    {
+                        // backslash escapes these: add the char without the backslash
+                        currentArg.Append(c);
+                    }
+                    else
+                    {
+                        // others are literal: keep the backslash too
+                        currentArg.Append('\\');
+                        currentArg.Append(c);
+                    }
+                }
+                else
+                {
+                    // outside double quotes (or in single quotes, which can't happen with escaped==true)
+                    currentArg.Append(c);
+                }
+
                 escaped = false;
                 continue;
             }
 
             if (c == '\\')
             {
-                escaped = true;
+                // backslash outside single quotes always begins an escape
+                if (inSingleQuote)
+                {
+                    // literal inside single quotes
+                    currentArg.Append(c);
+                }
+                else
+                {
+                    escaped = true;
+                }
                 continue;
             }
 
             if (c == '\'')
             {
-                if (!inDoubleQuote)
+                if (inDoubleQuote)
+                {
+                    // literal single quote inside double quotes
+                    currentArg.Append(c);
+                }
+                else
                 {
                     inSingleQuote = !inSingleQuote;
                 }
-                else
-                {
-                    currentArg += c;
-                }
+                continue;
             }
-            else if (c == '"')
+
+            if (c == '"')
             {
-                if (!inSingleQuote)
+                if (inSingleQuote)
+                {
+                    // literal double quote inside single quotes
+                    currentArg.Append(c);
+                }
+                else
                 {
                     inDoubleQuote = !inDoubleQuote;
                 }
-                else
-                {
-                    currentArg += c;
-                }
+                continue;
             }
-            else if (c == ' ' && !inSingleQuote && !inDoubleQuote)
+
+            if (char.IsWhiteSpace(c) && !inSingleQuote && !inDoubleQuote)
             {
                 if (currentArg.Length > 0)
                 {
-                    args.Add(currentArg);
-                    currentArg = "";
+                    args.Add(currentArg.ToString());
+                    currentArg.Clear();
                 }
+                continue;
             }
-            else
-            {
-                currentArg += c;
-            }
+
+            currentArg.Append(c);
         }
 
         if (currentArg.Length > 0)
         {
-            args.Add(currentArg);
+            args.Add(currentArg.ToString());
         }
 
-        return [.. args];
+        return args.ToArray();
     }
+
 }
