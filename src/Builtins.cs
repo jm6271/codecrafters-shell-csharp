@@ -8,11 +8,35 @@ static class Builtins
 {
     public static readonly Dictionary<string, Action<string[]>> Commands = new()
     {
+        ["cd"] = Cd,
         ["echo"] = Echo,
         ["exit"] = Exit,
         ["pwd"] = Pwd,
         ["type"] = Type,
     };
+
+    public static void Cd(string[] args)
+    {
+        if (args.Length == 1)
+        {
+            Console.Error.WriteLine("cd: Error: No directory provided");
+        }
+        else if (args.Length > 2)
+        {
+            Console.Error.WriteLine("cd: Error: Too many arguments");
+        }
+        else
+        {
+            if (Directory.Exists(args[1]))
+            {
+                Directory.SetCurrentDirectory(args[1]);
+            }
+            else
+            {
+                Console.WriteLine($"cd: {args[1]}: No such file or directory");
+            }
+        }
+    }
 
     public static void Echo(string[] args)
     {
