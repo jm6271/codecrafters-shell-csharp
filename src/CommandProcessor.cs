@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 class CommandProcessor
 {
     public void ProcessCommand(string command)
@@ -16,6 +14,17 @@ class CommandProcessor
         {
             // Run builtin command
             Builtins.Commands[args[0]](args);
+        }
+        else if (File.Exists(args[0])) // Relative path from current directory
+        {
+            // If it doesn't contain a '/' character, don't run i.e. command should be './command', not 'command'
+            if (args[0].Contains('/'))
+                ProcessLauncher.RunProgram(args);
+            else
+            {
+                Console.Error.WriteLine($"{args[0]}: command not found");
+                Console.Error.WriteLine($"Note: did you mean: './{args[0]}'?");
+            }
         }
         else
         {

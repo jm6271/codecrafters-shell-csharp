@@ -11,6 +11,10 @@ autom4te.cache/
 tarballs/
 test-results/
 
+# Test program
+arg-test
+arg-test.c
+
 # Mac bundle stuff
 *.dmg
 *.app
