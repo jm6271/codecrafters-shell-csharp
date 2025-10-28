@@ -2,6 +2,7 @@
 
 // NOTE: args array include the name of the command as the first item
 
+using System.Formats.Asn1;
 using System.Xml;
 
 static class Builtins
@@ -27,7 +28,19 @@ static class Builtins
         }
         else
         {
-            if (Directory.Exists(args[1]))
+            if (args[1] == "~") // Home directory
+            {
+                string? home = Environment.GetEnvironmentVariable("HOME");
+                if (home != null)
+                {
+                    Directory.SetCurrentDirectory(home);
+                }
+                else
+                {
+                    Console.Error.WriteLine("cd: Error: couldn't find home directory");
+                }
+            }
+            else if (Directory.Exists(args[1]))
             {
                 Directory.SetCurrentDirectory(args[1]);
             }
