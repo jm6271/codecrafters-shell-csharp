@@ -12,6 +12,7 @@ static class Builtins
         ["cd"] = Cd,
         ["echo"] = Echo,
         ["exit"] = Exit,
+        ["history"] = History,
         ["pwd"] = Pwd,
         ["type"] = Type,
     };
@@ -90,6 +91,11 @@ static class Builtins
         {
             Console.Error.WriteLine("exit: Error: Too many arguments");
         }
+    }
+
+    public static void History(string[] args)
+    {
+        
     }
 
     public static void Pwd(string[] args)
