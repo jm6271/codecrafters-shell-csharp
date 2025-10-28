@@ -10,6 +10,7 @@ static class Builtins
     {
         ["echo"] = Echo,
         ["exit"] = Exit,
+        ["pwd"] = Pwd,
         ["type"] = Type,
     };
 
@@ -51,6 +52,18 @@ static class Builtins
         else
         {
             Console.Error.WriteLine("exit: Error: Too many arguments");
+        }
+    }
+
+    public static void Pwd(string[] args)
+    {
+        if (args.Length == 1)
+        {
+            Console.WriteLine(Directory.GetCurrentDirectory());
+        }
+        else
+        {
+            Console.Error.WriteLine("pwd: Error: Too many arguments");
         }
     }
 
