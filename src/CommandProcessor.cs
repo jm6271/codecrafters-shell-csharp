@@ -20,39 +20,13 @@ class CommandProcessor
         else
         {
             // Try to run a program
-
             SystemCommandLookup commandLookup = new();
-            try
+            
+            if (commandLookup.DoesCommandExist(args[0]))
+                ProcessLauncher.RunProgram(args);
+            else
             {
-                var program = commandLookup.GetCommandPath(args[0]);
-                var process = new Process
-                {
-                    StartInfo = new()
-                    {
-                        FileName = program,
-                        Arguments = string.Join(" ", args.Skip(1).ToArray()),
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        CreateNoWindow = true
-                    }
-                };
-
-
-                process.Start();
-                process.OutputDataReceived += (s, e) => { if (e.Data != null) Console.WriteLine(e.Data); };
-                process.ErrorDataReceived += (s, e) => { if (e.Data != null) Console.Error.WriteLine(e.Data); };
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
-                process.WaitForExit();
-            }
-            catch (FileNotFoundException)
-            {
-                Console.WriteLine($"{args[0]}: command not found");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Error: {e.Message}");
+                Console.Error.WriteLine($"{args[0]}: not found");
             }
         }
     }

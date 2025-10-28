@@ -19,6 +19,25 @@ class SystemCommandLookup
         }
     }
 
+    public bool DoesCommandExist(string command)
+    {
+        // Search all directories on path for the specified command
+        foreach (var dir in PathDirs)
+        {
+            var path = Path.Combine(dir, command);
+            if (File.Exists(path))
+            {
+                // Check execute permissions
+                var info = new UnixFileInfo(path);
+
+                if (info.CanAccess(AccessModes.X_OK))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
     public string GetCommandPath(string command)
     {
         // Search all directories on path for the specified command
