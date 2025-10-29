@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
+    <PackageReference Include="ReadLine" Version="2.0.1" />
   </ItemGroup>
 
 </Project>

@@ -101,13 +101,14 @@ static class Builtins
         }
 
         int startIndex = 0;
+        var historyList = ReadLine.GetHistory();
 
         if (args.Length == 2)
         {
             try
             {
                 int historyParam = Convert.ToInt32(args[1]);
-                startIndex = ShellHistory.History.Count - historyParam;
+                startIndex = historyList.Count - historyParam;
             }
             catch (Exception)
             {
@@ -115,9 +116,9 @@ static class Builtins
             }
         }
 
-        for (int i = startIndex; i < ShellHistory.History.Count; i++)
+        for (int i = startIndex; i < historyList.Count; i++)
         {
-            Console.WriteLine($"    {i + 1}  {ShellHistory.History[i]}");
+            Console.WriteLine($"    {i + 1}  {historyList[i]}");
         }
     }
 

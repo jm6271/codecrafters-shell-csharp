@@ -9,7 +9,7 @@ class Program
             Console.Write("$ ");
 
             // Read command
-            string command = Console.ReadLine() ?? "";
+            string command = ReadLine.Read() ?? "";
 
             // Process command
             commandProcessor.ProcessCommand(command);                  

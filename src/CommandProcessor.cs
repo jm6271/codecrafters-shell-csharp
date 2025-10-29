@@ -7,7 +7,7 @@ class CommandProcessor
         if (command == "") return;
 
         // Save to history
-        ShellHistory.History.Add(command);
+        ReadLine.AddHistory(command);
 
         // Split into array of args
         var args = SplitArgs(command);
