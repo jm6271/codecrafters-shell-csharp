@@ -2,9 +2,6 @@
 
 // NOTE: args array include the name of the command as the first item
 
-using System.Formats.Asn1;
-using System.Xml;
-
 static class Builtins
 {
     public static readonly Dictionary<string, Action<string[]>> Commands = new()
@@ -95,7 +92,16 @@ static class Builtins
 
     public static void History(string[] args)
     {
-        
+        if (args.Length > 1)
+        {
+            Console.Error.WriteLine("history: Error: Too many arguments");
+            return;
+        }
+
+        for (int i = 0; i < ShellHistory.History.Count; i++)
+        {
+            Console.WriteLine($"    {i + 1}  {ShellHistory.History[i]}");
+        }
     }
 
     public static void Pwd(string[] args)
