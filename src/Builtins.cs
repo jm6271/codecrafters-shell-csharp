@@ -2,6 +2,8 @@
 
 // NOTE: args array include the name of the command as the first item
 
+using System.ComponentModel;
+
 static class Builtins
 {
     public static readonly Dictionary<string, Action<string[]>> Commands = new()
@@ -92,13 +94,28 @@ static class Builtins
 
     public static void History(string[] args)
     {
-        if (args.Length > 1)
+        if (args.Length > 2)
         {
             Console.Error.WriteLine("history: Error: Too many arguments");
             return;
         }
 
-        for (int i = 0; i < ShellHistory.History.Count; i++)
+        int startIndex = 0;
+
+        if (args.Length == 2)
+        {
+            try
+            {
+                int historyParam = Convert.ToInt32(args[1]);
+                startIndex = ShellHistory.History.Count - historyParam;
+            }
+            catch (Exception)
+            {
+                Console.Error.WriteLine($"history: Error: invalid argument '{args[1]}'");
+            }
+        }
+
+        for (int i = startIndex; i < ShellHistory.History.Count; i++)
         {
             Console.WriteLine($"    {i + 1}  {ShellHistory.History[i]}");
         }
