@@ -12,8 +12,11 @@ class CommandProcessor
         // Split into array of args
         var args = SplitArgs(command);
 
-        // Lookup the command in the builtins
-        if (IsBuiltin(args[0]))
+        if (RedirectionParser.IsRedirect(args)) // Redirect output to a file
+        {
+            RedirectionParser.ExecuteRedirection(args);
+        }
+        else if (IsBuiltin(args[0])) // Lookup the command in the builtins
         {
             // Run builtin command
             Builtins.Commands[args[0]](args);
